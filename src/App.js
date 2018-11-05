@@ -1,26 +1,135 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
+import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+
+const topics = [
+  {
+    name: 'React Router',
+    id: 'react-router',
+    description: 'Declarative, component based routing for React',
+    resources: [
+      {
+        name: 'URL Parameters',
+        id: 'url-parameters',
+        description:
+          "URL parameters are parameters whose values are set dynamically in a page's URL. This allows a route to render the same component while passing that component the dynamic portion of the URL so it can change based off of it.",
+        url: 'https://tylermcginnis.com/react-router-url-parameters',
+      },
+      {
+        name: 'Programatically navigate',
+        id: 'programmatically-navigate',
+        description:
+          "When building an app with React Router, eventually you'll run into the question of navigating programmatically. The goal of this post is to break down the correct approaches to programmatically navigating with React Router.",
+        url: 'https://tylermcginnis.com/react-router-programmatically-navigate/',
+      },
+    ],
+  },
+  {
+    name: 'React.js',
+    id: 'reactjs',
+    description: 'A JavaScript library for building user interfaces',
+    resources: [
+      {
+        name: 'React Lifecycle Events',
+        id: 'react-lifecycle',
+        description:
+          "React Lifecycle events allow you to tie into specific phases of a component's life cycle",
+        url: 'https://tylermcginnis.com/an-introduction-to-life-cycle-events-in-react-js/',
+      },
+      {
+        name: 'React AHA Moments',
+        id: 'react-aha',
+        description: "A collection of 'Aha' moments while learning React.",
+        url: 'https://tylermcginnis.com/react-aha-moments/',
+      },
+    ],
+  },
+  {
+    name: 'Functional Programming',
+    id: 'functional-programming',
+    description:
+      'In computer science, functional programming is a programming paradigm—a style of building the structure and elements of computer programs—that treats computation as the evaluation of mathematical functions and avoids changing-state and mutable data.',
+    resources: [
+      {
+        name: 'Imperative vs Declarative programming',
+        id: 'imperative-declarative',
+        description:
+          'A guide to understanding the difference between Imperative and Declarative programming.',
+        url: 'https://tylermcginnis.com/imperative-vs-declarative-programming/',
+      },
+      {
+        name: 'Building User Interfaces with Pure Functions and Function Composition',
+        id: 'fn-composition',
+        description: 'A guide to building UI with pure functions and function composition in React',
+        url:
+          'https://tylermcginnis.com/building-user-interfaces-with-pure-functions-and-function-composition-in-react-js/',
+      },
+    ],
+  },
+];
+
+const Home = () => (
+  <div>
+    <h2>Home</h2>
+  </div>
+);
+
+const Topic = ({ match }) => {
+  const topic = topics.find(({ id }) => id === match.params.topicId);
+  return (
+    <div>
+      <h2>{topic.name}</h2>
+      <div>
+        {topic.resources.map(resource => (
+          <li>
+            <Link to={`/topics/${topic.id}/${resource.id}`}>{resource.name}</Link>
+          </li>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const Topics = () => (
+  <div>
+    <h2>Topics</h2>
+
+    <ul>
+      {topics.map(topic => {
+        return (
+          <li>
+            <Link to={`/topics/${topic.id}`}>{topic.name}</Link>
+          </li>
+        );
+      })}
+    </ul>
+
+    <hr />
+    <Route path="/topics/:topicId" component={Topic} />
+  </div>
+);
 
 class App extends Component {
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
+      <Router>
+        <div className="App">
+          My App
+          <ul>
+            <li>
+              <Link to="/">Home</Link>
+            </li>
+            <li>
+              <Link to="/topics">Topics</Link>
+            </li>
+          </ul>
+          <hr />
+          <div id="content">
+            <Route exact path="/" component={Home} />
+            <Route path="/topics" component={Topics} />
+          </div>
+        </div>
+      </Router>
     );
   }
 }
